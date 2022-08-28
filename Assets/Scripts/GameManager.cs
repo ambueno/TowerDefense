@@ -8,7 +8,7 @@ public class GameManager : MonoBehaviour {
     
     private void Start() { gameOver.SetActive(false); }
 
-    void Update() { if(GameOver()) gameOver.SetActive(true); }
+    void Update() { if(GameOver()){ gameOver.SetActive(true);} }
     
     private bool GameOver() { return player.GetComponent<Player>().IsDead(); }
     

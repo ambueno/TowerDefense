@@ -5,11 +5,7 @@ using UnityEngine;
 public class EnemyBehaviour : MonoBehaviour {
     private float enemyHealth = 100;
     
-    void Update(){
-        if(enemyHealth <= 0){
-            Destroy(gameObject);
-        }
-    }
+    void Update(){ if(enemyHealth <= 0) Destroy(gameObject); }
     
     void Start(){
         UnityEngine.AI.NavMeshAgent agent = GetComponent<UnityEngine.AI.NavMeshAgent>();

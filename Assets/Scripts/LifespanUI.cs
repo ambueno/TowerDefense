@@ -8,7 +8,9 @@ using TMPro;
 public class LifespanUI : MonoBehaviour {
     [SerializeField]
     private TextMeshProUGUI text;
-    [SerializeField] public Player player;
+    [SerializeField] private Player player;
+    [SerializeField] private TowerBuilder towerBuilder;
+
     void Start () { text = GetComponent<TMPro.TextMeshProUGUI> (); }
-    void Update() { text.text = ("Vida: " + player.GetLifespan()); }
+    void Update() { text.text = ("Vida: " + player.GetLifespan() + "\n" + "Torres" + "\n" + "restantes:" + towerBuilder.GetTowerCount()); }
 }

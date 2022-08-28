@@ -5,24 +5,17 @@ using UnityEngine;
 
 public class TowerBuilder : MonoBehaviour {
     [SerializeField] private GameObject towerPrefab;
-
+    
+    [SerializeField] private int towerCount = 8;
+    
+    [SerializeField] private float radius = 1000000.0f;
+    
     private Vector3 elementPosition;
 
-    public int towersLeft = 7;
-
-    public int AmountOfTowersLeft() { return towersLeft; }
-    
-    private bool OnClick() { return Input.GetMouseButtonDown(0); }
-    
     void Update() {
-        if (towersLeft > 0 ){
-            if (OnClick()) {
-                Vector3 clickPosition = Input.mousePosition;
-                Ray cameraRay = Camera.main.ScreenPointToRay(clickPosition);
-
-                float maxLenght = 1000000.0f;
-
-                Physics.Raycast(cameraRay, out RaycastHit rayData, maxLenght);
+        if (towerCount > 0 ){
+            if (Input.GetMouseButtonDown(0)) {
+                Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out RaycastHit rayData, radius);
 
                 if (rayData.collider) {
                     elementPosition = rayData.point;
@@ -30,8 +23,10 @@ public class TowerBuilder : MonoBehaviour {
                     Instantiate(towerPrefab, elementPosition, Quaternion.identity);
                 }
 
-                towersLeft--;
+                towerCount--;
             }
         }
     }
+    
+    public int GetTowerCount() { return towerCount; }
 }

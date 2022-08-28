@@ -15,6 +15,5 @@ public class Player : MonoBehaviour {
     
     public void Restart() {
         ResetLifespan();
-        transform.position = Vector3.zero;
     }
 }
