@@ -1,19 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour {
-    [SerializeField] private GameObject player;
     [SerializeField] private GameObject gameOver;
     
-    private void Start() { gameOver.SetActive(false); }
+    void Start() { gameOver.SetActive(false); }
 
-    void Update() { if(GameOver()){ gameOver.SetActive(true);} }
+    public void Restart() { SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex); }
     
-    private bool GameOver() { return player.GetComponent<Player>().IsDead(); }
-    
-    public void Restart() {
-        gameOver.SetActive(false);
-        player.GetComponent<Player>().Restart();
-    }
 }

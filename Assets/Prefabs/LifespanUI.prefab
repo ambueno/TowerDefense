@@ -149,5 +149,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   text: {fileID: 0}
-  player: {fileID: 0}
-  towerBuilder: {fileID: 0}
+  player: {fileID: 4269746683058582390, guid: 3e9bee0283e5117489d457b4c37bdfaf, type: 3}
+  towerBuilder: {fileID: 7247524859349329343, guid: 96f99ea0c82b79d46acc936a097536a3, type: 3}

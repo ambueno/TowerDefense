@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class EnemyBehaviour : MonoBehaviour {
-    private float enemyHealth = 100;
+    private float projectileDamage = 10f;
+
+    private float enemyHealth = 80;
     
     void Update(){ if(enemyHealth <= 0) Destroy(gameObject); }
     
@@ -11,6 +13,8 @@ public class EnemyBehaviour : MonoBehaviour {
         UnityEngine.AI.NavMeshAgent agent = GetComponent<UnityEngine.AI.NavMeshAgent>();
         agent.SetDestination(GameObject.Find("End").transform.position);
     }
-
-    public void TakeDamage(float damage){ enemyHealth -= damage; }
+    
+    private void OnTriggerEnter(Collider collidedObject) {
+        enemyHealth -= projectileDamage;
+    }
 }

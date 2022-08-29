@@ -3,30 +3,26 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class ProjectileBehaviour : MonoBehaviour {
-    private Transform target;
-    [SerializeField] private float projectileSpeed = 20f;
-    [SerializeField] private float projectileDamage = 10f;
+    private EnemyBehaviour target;
+    
+    private float projectileLifeTime = 10;
+    [SerializeField] private float projectileSpeed;
+
+    void Start() {
+        Destroy(this.gameObject, projectileLifeTime);
+    }
 
     void Update() {
-        if (target == null) {
-            Destroy(gameObject);
-            return;
-        }
-        Vector3 direction = target.position - transform.position;
-        float distanceThisFrame = projectileSpeed * Time.deltaTime;
-        if (direction.magnitude <= projectileSpeed * Time.deltaTime) {
-            HitTarget();
-            return;
-        }
-        //transform.Translate(direction.normalized * projectileSpeed * Time.deltaTime);
+        transform.position = transform.position + transform.forward * projectileSpeed * Time.deltaTime;
+        transform.rotation = Quaternion.LookRotation(target.transform.position - transform.position);
     }
-    
-    public void Seek(Transform target) { this.target = target; }
-    
-    void HitTarget() {
-       // if (collidedObject.gameObject.tag == "EnemyTag") {
-            target.GetComponent<EnemyBehaviour>().TakeDamage(projectileDamage);
-            Destroy(gameObject);
-        //}
+
+    public void SetTarget(EnemyBehaviour target) { this.target = target; }
+
+    private void OnTriggerEnter(Collider collidedObject) {
+        Debug.Log("Projectile collided with " + collidedObject.name);
+        if (collidedObject.CompareTag("EnemyTag")) {
+            Destroy(this.gameObject);
+        }
     }
 }

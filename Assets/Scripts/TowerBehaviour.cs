@@ -4,66 +4,35 @@ using System.Security.Permissions;
 using UnityEngine;
 
 public class TowerBehaviour : MonoBehaviour {
-
     [SerializeField] private GameObject projectilePrefab;
-    [SerializeField] private float reloadTime = 1f;
-    [SerializeField] private float range = 20f;
-    
-    private float fireRate = 1f;
-    private float fireCountdown = 0f;
-    private Transform target;
-    private EnemyBehaviour targetEnemy;
-    private float timeSinceLastShot;
+    [SerializeField] private float reloadTime = 2f;
+    [SerializeField] private float range = 200f;
+    private float lastShot;
 
-    public string enemyTag = "EnemyTag";
-
-    public Transform partToRotate;
-    public float turnSpeed = 10f;
-
-    public Transform firePoint;
-    
-    void Start () { InvokeRepeating("FindClosestEnemy", 0f, 0.5f); }
-    
-    void Update() {
-        if (target) {
-            Vector3 direction = target.position - transform.position;
-            Quaternion lookRotation = Quaternion.LookRotation(direction);
-            Vector3 rotation = Quaternion.Lerp(partToRotate.rotation, lookRotation, Time.deltaTime * turnSpeed).eulerAngles;
-            partToRotate.rotation = Quaternion.Euler(0f, rotation.y, 0f);
-            if (fireCountdown <= 0f) {
-                Shoot();
-                fireCountdown = 1f / fireRate;
-            }
-            fireCountdown -= Time.deltaTime;
-        }
+    void Update(){
+        EnemyBehaviour target = FindClosestEnemy();
+        if (target) Shoot(target);
     }
-    
-    private void FindClosestEnemy() {
-        GameObject[] enemies = GameObject.FindGameObjectsWithTag(enemyTag);
-        GameObject closestEnemy = null;
-        float closestDistance = float.MaxValue;
-        foreach (GameObject enemy in enemies) {
-            float distance = Vector3.Distance(transform.position, enemy.transform.position);
-            if (distance < closestDistance) {
-                closestEnemy = enemy;
-                closestDistance = distance;
-            }
-        }
-        if (closestEnemy != null && closestDistance <= range) {
-            target = closestEnemy.transform;
-            targetEnemy = closestEnemy.GetComponent<EnemyBehaviour>();
-        } else { 
-            target = null;
-        }
-    }
-    
-    private void Shoot() {
-        timeSinceLastShot += Time.deltaTime;
-        if (timeSinceLastShot >= reloadTime) {
-            timeSinceLastShot = 0;
+
+    private void Shoot(EnemyBehaviour enemy){
+        if (Time.time - lastShot > reloadTime){
+            lastShot = Time.time;
             GameObject projectile = Instantiate(projectilePrefab, transform.position, Quaternion.identity);
-            projectile.GetComponent<ProjectileBehaviour>().Seek(target);
+            projectile.GetComponent<ProjectileBehaviour>().SetTarget(enemy);
         }
+    }
+
+    private EnemyBehaviour FindClosestEnemy(){
+        GameObject[] enemies = GameObject.FindGameObjectsWithTag("EnemyTag");
+        foreach (GameObject enemy in enemies) {
+            if (IsReachable(enemy)) return enemy.GetComponent<EnemyBehaviour>();
+        }
+        return null;
+    }
+
+    private bool IsReachable(GameObject enemy){
+        float distance = Vector3.Distance(Vector3.ProjectOnPlane(this.transform.position, Vector3.up), Vector3.ProjectOnPlane(enemy.transform.position, Vector3.up));
+        return distance <= range;
     }
 
 }
